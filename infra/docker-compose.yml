@@ -7,20 +7,26 @@ services:
       - "6922:22"
       - "6980:8080"
     volumes:
-       - jenkins_home:/var/jenkins_home
+      - jenkins_home:/var/jenkins_home
   gitlab:
     image: gitlab/gitlab-ce:17.2.0-ce.0
     container_name: gitlab-server
+    hostname: 'localhost'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://localhost'
+        gitlab_rails['gitlab_shell_ssh_port'] = 6923
     ports:
       - "6923:22"
       - "6985:80"
       - "6986:443"
     volumes:
-      - gitlab_home:/srv/gitlab
-      - '$GITLAB_HOME/config:/etc/gitlab'
-      - '$GITLAB_HOME/logs:/var/log/gitlab'
-      - '$GITLAB_HOME/data:/var/opt/gitlab'
+      - gitlab_config:/etc/gitlab
+      - gitlab_logs:/var/log/gitlab
+      - gitlab_data:/var/opt/gitlab
 
 volumes:
   jenkins_home:
-  gitlab_home:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
